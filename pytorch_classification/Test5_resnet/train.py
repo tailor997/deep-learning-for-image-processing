@@ -10,6 +10,7 @@ from tqdm import tqdm
 
 from model import resnet34
 
+#from torchvision.models.resnet
 
 def main():
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
