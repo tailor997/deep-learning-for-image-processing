@@ -11,6 +11,25 @@ from tqdm import tqdm
 from model import vgg
 
 
+def modify_vgg_model(model, num_classes=5):
+    # 修改最后一个全连接层的输出特征数
+    model.classifier[6] = nn.Linear(4096, num_classes)
+    return model
+
+
+# 加载预训练权重
+def load_pretrained_weights(model, pretrained_path):
+    pretrained_dict = torch.load(pretrained_path, map_location='cpu')
+    model_dict = model.state_dict()
+
+    # 过滤出模型中和预训练权重形状匹配的权重
+    pretrained_dict = {k: v for k, v in pretrained_dict.items() if k in model_dict and model_dict[k].shape == v.shape}
+
+    # 更新模型的权重
+    model_dict.update(pretrained_dict)
+    model.load_state_dict(model_dict)
+    return model
+
 def main():
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     print("using {} device.".format(device))
@@ -61,6 +80,15 @@ def main():
 
     model_name = "vgg16"
     net = vgg(model_name=model_name, num_classes=5, init_weights=True)
+
+    # 修改模型结构
+    net = modify_vgg_model(net)
+
+    # 加载预训练权重
+    pretrained_path = "./vgg16-pre.pth"
+    assert os.path.exists(pretrained_path), "file {} does not exist.".format(pretrained_path)
+    net = load_pretrained_weights(net, pretrained_path)
+
     net.to(device)
     loss_function = nn.CrossEntropyLoss()
     optimizer = optim.Adam(net.parameters(), lr=0.0001)

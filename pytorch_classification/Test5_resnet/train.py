@@ -10,7 +10,7 @@ from tqdm import tqdm
 
 from model import resnet34
 
-#from torchvision.models.resnet
+from torchvision.models.resnet
 
 def main():
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -82,7 +82,7 @@ def main():
 
     epochs = 3
     best_acc = 0.0
-    save_path = './resNet34.pth'
+    save_path = './resNet34_flower_cls5.pth'
     train_steps = len(train_loader)
     for epoch in range(epochs):
         # train

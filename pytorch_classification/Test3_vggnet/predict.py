@@ -18,7 +18,7 @@ def main():
          transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 
     # load image
-    img_path = "../tulip.jpg"
+    img_path = "./sunflower.jpg"
     assert os.path.exists(img_path), "file: '{}' dose not exist.".format(img_path)
     img = Image.open(img_path)
     plt.imshow(img)
@@ -37,7 +37,7 @@ def main():
     # create model
     model = vgg(model_name="vgg16", num_classes=5).to(device)
     # load model weights
-    weights_path = "./vgg16Net.pth"
+    weights_path = "./vgg16_flower_cls5.pth"
     assert os.path.exists(weights_path), "file: '{}' dose not exist.".format(weights_path)
     model.load_state_dict(torch.load(weights_path, map_location=device))
 
